@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="content-type">
+        <title>
+            JavascriptBridge Test HTML
+        </title>
+    </head>
+
+    <body>
+        <p>
+            <xmp id="show">
+            </xmp>
+        </p>
+        <p>
+            <input type="button" id="button1" value="Call Native Method From JS" onclick="initializeExample();"/>
+        </p>
+
+    </body>
+
+    <script>
+        function initializeExample() {
+            //call native method
+            WebViewJavascriptBridge.callHandler(
+                'initialize'
+                , null
+                , function responseCallback(responseData) {
+                    document.getElementById("show").innerHTML = "initialize finish!"
+                }
+            );
+
+            // this is a hack as i don't know when Javascript finishes initializing.
+            setup();
+        }
+
+        function updateJavascriptText() {
+            document.getElementById("show").innerHTML = "addUser invoked";
+        }
+
+        // Register Javascript methods which can be called from Native.
+        // this method should be called when Javascript finishes initializing.
+        function setup() {
+            WebViewJavascriptBridge.registerHandler("updateJavascriptText", function() {
+                document.getElementById("show").innerHTML = "Native method update JS text";
+            });
+        }
+
+    </script>
+
+</html>
